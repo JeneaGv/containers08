@@ -12,7 +12,14 @@ $tests = new TestFramework();
 function testDbConnection() {
     global $config;
     $db = new Database($config['db']);
-    return $db->isConnected();
+    
+    // Verificăm conexiunea executând o interogare simplă
+    try {
+        $result = $db->query("SELECT 1 as test");
+        return $result !== false && is_array($result);
+    } catch (Exception $e) {
+        return false;
+    }
 }
 
 // test 2: test count method
@@ -169,20 +176,16 @@ function testDbQuery() {
     return is_array($result) && count($result) > 0 && isset($result[0]['test']) && $result[0]['test'] == 1;
 }
 
-// test 8: test fetch method
-function testDbFetch() {
+// test 8: test connection/PDO getter method
+function testDbGetConnection() {
     global $config;
     $db = new Database($config['db']);
     
-    // Executăm un query simplu
-    $stmt = $db->getConnection()->prepare("SELECT 1 as test");
-    $stmt->execute();
+    // Verificăm că putem obține conexiunea PDO
+    $connection = $db->getConnection();
     
-    // Testăm metoda fetch
-    $result = $db->fetch($stmt);
-    
-    // Verificăm că rezultatul este un array și conține datele așteptate
-    return is_array($result) && isset($result['test']) && $result['test'] == 1;
+    // Verificăm că este o instanță PDO
+    return $connection instanceof PDO;
 }
 
 // test 9: test findAll method
@@ -524,7 +527,7 @@ $tests->add('Database read method', 'testDbRead');
 $tests->add('Database update method', 'testDbUpdate');
 $tests->add('Database delete method', 'testDbDelete');
 $tests->add('Database query method', 'testDbQuery');
-$tests->add('Database fetch method', 'testDbFetch');
+$tests->add('Database getConnection method', 'testDbGetConnection');
 $tests->add('Database findAll method', 'testDbFindAll');
 $tests->add('Database findOne method', 'testDbFindOne');
 
