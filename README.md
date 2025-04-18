@@ -50,6 +50,7 @@ INSERT INTO page (title, content) VALUES ('Page 3', 'Content 3');
 
 Creați în rădăcina directorului containers08 directorul ./tests. În directorul creat creați fișierul testframework.php cu următorul conținut:
 
+```
 <?php
 
 function message($type, $message) {
@@ -96,9 +97,10 @@ class TestFramework {
         return "{$this->success} / " . count($this->tests);
     }
 }
+```
 
 Cream în directorul ./tests fișierul tests.php cu următorul conținut:
-
+```
 <?php
 
 require_once __DIR__ . '/testframework.php';
@@ -143,9 +145,10 @@ $tests->add('data create', 'testDbCreate');
 $tests->run();
 
 echo $tests->getResult();
+```
 
 Adăugam în fișierul ./tests/tests.php teste pentru toate metodele clasei Database, precum și pentru metodele clasei Page.
-
+```
 <?php
 
 require_once __DIR__ . '/testframework.php';
@@ -310,6 +313,8 @@ $tests->add('Page render', 'testPageRender');
 $tests->run();
 
 echo "Test results: " . $tests->getResult();
+
+```
 
 # Crearea Dockerfile
 
